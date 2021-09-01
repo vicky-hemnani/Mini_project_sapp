@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#151515"
+    android:id="@+id/audio_items"
+    android:layout_marginTop="5dp">
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/music_img"
+        android:src="@drawable/logo4"
+        android:padding="5dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="File Name"
+        android:layout_toEndOf="@id/music_img"
+        android:layout_marginStart="10dp"
+        android:layout_toStartOf="@id/like_song"
+        android:layout_centerVertical="true"
+        android:textColor="@color/white"
+        android:id="@+id/music_file_name"/>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:id="@+id/menu_more"
+        android:src="@drawable/options_more"
+        android:layout_alignParentEnd="true"
+        android:padding="2dp"/>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:id="@+id/like_song"
+        android:src="@drawable/heart_vec"
+        android:layout_alignParentEnd="true"
+        android:padding="5dp"
+        android:layout_marginEnd="40dp"/>
+</RelativeLayout>
