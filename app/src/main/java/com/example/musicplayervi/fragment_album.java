@@ -9,9 +9,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.HashMap;
 
 
 public class fragment_album extends Fragment {
@@ -19,8 +22,9 @@ public class fragment_album extends Fragment {
 
     RecyclerView recyclerView;
     AlbumAdapter albumAdaptor;
-
+    HashMap<String,Music> albumFiles;
     public fragment_album() {
+        albumFiles=new HashMap<>();
     }
 
 
@@ -32,7 +36,11 @@ public class fragment_album extends Fragment {
         recyclerView.setHasFixedSize(true);
         if(musicfiles!=null) {
             if (!(musicfiles.size() < 1)) {
-                albumAdaptor = new AlbumAdapter(getContext(), musicfiles);
+                for (Music file : musicfiles) {
+                    albumFiles.put(file.getAlbum(), file);
+                }
+
+                albumAdaptor = new AlbumAdapter(getContext(), albumFiles);
                 recyclerView.setAdapter(albumAdaptor);
                 recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
             }

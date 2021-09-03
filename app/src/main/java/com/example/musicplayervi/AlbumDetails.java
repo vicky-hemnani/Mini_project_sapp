@@ -28,16 +28,18 @@ public class AlbumDetails extends AppCompatActivity {
         albumPic = findViewById(R.id.albumPic);
         albumName = getIntent().getStringExtra("albumName");
         int j = 0;
+        String st;
         for (int i = 0; i < musicfiles.size(); i++)
         {
-            if(albumName.equals(musicfiles.get(i).getAlbum()));
+            st=musicfiles.get(i).getAlbum().toString();
+            if(albumName.equals(st))
             {
-                Log.d("Album Name", "onCreate: "+musicfiles.get(i).getAlbum()+"--------"+albumName);
+                Log.d("Album Name", "onCreate: "+st+"--------"+albumName);
                 albumSongs.add(j,musicfiles.get(i));
                 j++;
             }
         }
-        byte[] image=getalbum(albumSongs.get(1).getPath());
+        byte[] image=getalbum(albumSongs.get(0).getPath());
         Log.d("what", "Waht is error "+albumName);
         if(image!=null)
         {

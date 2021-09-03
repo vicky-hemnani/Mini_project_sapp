@@ -4,7 +4,7 @@
     android:layout_width="170dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/album_items"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="15dp"
     app:cardElevation="10dp"
     android:layout_margin="10dp"
     android:layout_height="200dp">
@@ -12,7 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#171717"
+        android:background="@drawable/gradient_bg"
         android:id="@+id/relative_layout">
 
         <ImageView

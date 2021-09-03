@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,42 +17,47 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
 
     private Context nContext;
-    private ArrayList<Music> albumFiles;
+    private HashMap<String,Music> albumFilesHash;
     View view;
 
-    public AlbumAdapter(Context nContext, ArrayList<Music> albumFiles) {
+    public AlbumAdapter(Context nContext, HashMap<String,Music> albumFilesHash) {
         this.nContext = nContext;
-        this.albumFiles = albumFiles;
+        this.albumFilesHash=albumFilesHash;
     }
 
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         view= LayoutInflater.from(nContext).inflate(R.layout.album_item,parent,false);
         return new MyHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.album_name.setText(albumFiles.get(position).getAlbum());
-        byte[] image=getalbum(albumFiles.get(position).getPath());
+        Log.d("Keys", "onCreateView: "+albumFilesHash.keySet());
+        Object firstKey = albumFilesHash.keySet().toArray()[position];
+        holder.album_name.setText(albumFilesHash.get(firstKey).getAlbum());
+        byte[] image=getalbum(albumFilesHash.get(firstKey).getPath());
         if(image!=null)
         {
             Glide.with(nContext).asBitmap().load(image).into(holder.album_img);
         }
         else
         {
-            Glide.with(nContext).asBitmap().load(R.drawable.logo4).into(holder.album_img);
+            Glide.with(nContext).asBitmap().load(R.drawable.imgg).into(holder.album_img);
         }
        holder.itemView.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
                Intent intent=new Intent(nContext,AlbumDetails.class);
-               intent.putExtra("albumName",albumFiles.get(position).getAlbum());
+               intent.putExtra("albumName",albumFilesHash.get(firstKey).getAlbum());
                nContext.startActivity(intent);
            }
        });
@@ -59,7 +65,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
 
     @Override
     public int getItemCount() {
-        return albumFiles.size();
+        return albumFilesHash.size();
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
