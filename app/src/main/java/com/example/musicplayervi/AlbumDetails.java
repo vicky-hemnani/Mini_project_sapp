@@ -3,6 +3,7 @@ package com.example.musicplayervi;
 import static com.example.musicplayervi.MainActivity.musicfiles;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.media.MediaMetadataRetriever;
@@ -20,6 +21,7 @@ public class AlbumDetails extends AppCompatActivity {
     ImageView albumPic;
     String albumName;
     ArrayList<Music> albumSongs=new ArrayList<>();
+    AlbumDetailsAdaptor albumDetailsAdaptor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +53,19 @@ public class AlbumDetails extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!(albumSongs.size()<1))
+        {
+            albumDetailsAdaptor=new AlbumDetailsAdaptor(this,albumSongs);
+            recyclerView.setAdapter(albumDetailsAdaptor);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this,RecyclerView.VERTICAL,false));
+
+        }
+    }
+
     private byte[] getalbum(String uri)
     {
         MediaMetadataRetriever retriever=new MediaMetadataRetriever();
