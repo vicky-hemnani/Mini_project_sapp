@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.palette.graphics.Palette;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -36,7 +37,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
 
 
     TextView song_name,artist_name,duration_total,duration_played;
-    ImageView cover_art,nextBtn,prevBtn,backBtn,shuffleBtn,repeatBtn;
+    ImageView cover_art,nextBtn,prevBtn,backBtn,shuffleBtn,repeatBtn,back_btn;
     FloatingActionButton playPauseBtn;
     SeekBar seekBar;
     int position=-1;
@@ -117,6 +118,13 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
                 }
             }
         });
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private String formattedText(int currentpos)
@@ -148,6 +156,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         if(media_obj!=null)
         {
             media_obj.stop();
+            media_obj.reset();
             media_obj.release();
             media_obj=MediaPlayer.create(getApplicationContext(),uri);
             media_obj.start();
@@ -174,6 +183,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         repeatBtn=findViewById(R.id.repeat);
         playPauseBtn=findViewById(R.id.play_pause);
         seekBar=findViewById(R.id.seekbar);
+        back_btn=findViewById(R.id.back_btn);
 
     }
     private void metadata(Uri uri)
@@ -303,6 +313,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         if(media_obj.isPlaying())
         {
             media_obj.stop();
+            media_obj.reset();
             media_obj.release();
             if(shuffleBool && !repeatBool)
             {
@@ -334,6 +345,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         }
         else {
             media_obj.stop();
+            media_obj.reset();
             media_obj.release();
             if(shuffleBool && !repeatBool)
             {
@@ -386,6 +398,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         if(media_obj.isPlaying())
         {
             media_obj.stop();
+            media_obj.reset();
             media_obj.release();
             if(shuffleBool && !repeatBool)
             {
@@ -420,6 +433,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         }
         else {
             media_obj.stop();
+            media_obj.reset();
             media_obj.release();
             if(shuffleBool && !repeatBool)
             {
