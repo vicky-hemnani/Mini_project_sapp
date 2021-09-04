@@ -198,6 +198,8 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         playPauseBtn=findViewById(R.id.play_pause);
         seekBar=findViewById(R.id.seekbar);
         back_btn=findViewById(R.id.back_btn);
+        shuffleBool=false;
+        repeatBool=false;
 
     }
     private void metadata(Uri uri)

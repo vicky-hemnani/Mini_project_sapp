@@ -55,11 +55,12 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull MusicAdaptor.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.file_name.setText(nFiles.get(position).getTitle());
+        if(likefiles.isEmpty()!=true){
         Boolean b=likefiles.contains(musicfiles.get(position));
         if(b)
             holder.like_music.setImageResource(R.drawable.heart_on);
         else
-            holder.like_music.setImageResource(R.drawable.heart_vec);
+            holder.like_music.setImageResource(R.drawable.heart_vec);}
         byte[] image=getalbum(nFiles.get(position).getPath());
         if(image!=null)
         {
