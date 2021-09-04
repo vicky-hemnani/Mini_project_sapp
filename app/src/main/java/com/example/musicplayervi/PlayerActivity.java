@@ -16,6 +16,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -30,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static com.example.musicplayervi.AlbumDetailsAdaptor.albumFilesHash;
 import static com.example.musicplayervi.MainActivity.musicfiles;
 import static com.example.musicplayervi.MainActivity.*;
 
@@ -146,7 +148,15 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
     }
     private void getIntentFunction() {
         position=getIntent().getIntExtra("position",-1);
-        list_music=musicfiles;
+        String sender=getIntent().getStringExtra("sender");
+        if(sender!=null && sender.equals("albumDetails"))
+        {
+            Log.d("check", "getIntentFunction: HEllo");
+            list_music=albumFilesHash;
+        }
+        else {
+            list_music=musicfiles;
+        }
         if(list_music!=null)
         {
             playPauseBtn.setImageResource(R.drawable.pause_vec);

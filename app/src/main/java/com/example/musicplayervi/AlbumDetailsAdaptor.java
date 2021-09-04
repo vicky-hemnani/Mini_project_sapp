@@ -23,7 +23,7 @@ import java.util.HashSet;
 public class AlbumDetailsAdaptor extends RecyclerView.Adapter<AlbumDetailsAdaptor.MyHolder> {
 
     private Context nContext;
-    private ArrayList<Music> albumFilesHash;
+    static ArrayList<Music> albumFilesHash;
     View view;
 
     public AlbumDetailsAdaptor(Context nContext, ArrayList<Music> albumFilesHash) {
@@ -51,6 +51,16 @@ public class AlbumDetailsAdaptor extends RecyclerView.Adapter<AlbumDetailsAdapto
         {
             Glide.with(nContext).asBitmap().load(R.drawable.imgg).into(holder.album_img);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(nContext,PlayerActivity.class);
+                intent.putExtra("sender","albumDetails");
+                intent.putExtra("position",position);
+                nContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
