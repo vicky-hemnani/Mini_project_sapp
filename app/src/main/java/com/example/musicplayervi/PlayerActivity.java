@@ -154,6 +154,10 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             Log.d("check", "getIntentFunction: HEllo");
             list_music=albumFilesHash;
         }
+        else if (sender!=null && sender.equals("Playlikes"))
+        {
+            list_music=likefiles;
+        }
         else {
             list_music=musicfiles;
         }

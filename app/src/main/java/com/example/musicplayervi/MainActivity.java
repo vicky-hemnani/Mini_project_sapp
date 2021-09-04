@@ -38,14 +38,13 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE=1;
-    static ArrayList<Music> musicfiles;
-    static boolean shuffleBool=false,repeatBool=false,likeBool=false;
+    static ArrayList<Music> musicfiles,likefiles;
+    static boolean shuffleBool=false,repeatBool=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViewPager();
-
         permission();
 
     }
@@ -73,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
        }
        else{
            musicfiles=getAllAudio(this);
+           likefiles=new ArrayList<>();
            initViewPager();
        }
    }

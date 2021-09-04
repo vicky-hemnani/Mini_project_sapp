@@ -31,12 +31,12 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder> {
+public class LikesAdaptor extends RecyclerView.Adapter<LikesAdaptor.MyViewHolder> {
 
     private Context nContext;
     private ArrayList<Music> nFiles;
 
-    MusicAdaptor(Context context,ArrayList<Music> nFiles)
+    LikesAdaptor(Context context,ArrayList<Music> nFiles)
     {
         this.nFiles=nFiles;
         this.nContext=context;
@@ -53,13 +53,9 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MusicAdaptor.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull LikesAdaptor.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.file_name.setText(nFiles.get(position).getTitle());
-        Boolean b=likefiles.contains(musicfiles.get(position));
-        if(b)
-            holder.like_music.setImageResource(R.drawable.heart_on);
-        else
-            holder.like_music.setImageResource(R.drawable.heart_vec);
+        holder.like_music.setImageResource(R.drawable.heart_on);
         byte[] image=getalbum(nFiles.get(position).getPath());
         if(image!=null)
         {
@@ -74,6 +70,7 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
             public void onClick(View v) {
                 Intent intent=new Intent(nContext,PlayerActivity.class);
                 intent.putExtra("position",position);
+                intent.putExtra("sender","Playlikes");
                 nContext.startActivity(intent);
             }
         });
@@ -87,7 +84,7 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
                     switch (item.getItemId())
                     {
                         case R.id.delete:
-                           // Toast.makeText(nContext,"Deleted",Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(nContext,"Deleted",Toast.LENGTH_SHORT).show();
                             deleteSong(position,v);
                     }
                     return true;
@@ -98,19 +95,12 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
         holder.like_music.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Boolean likeBool=likefiles.contains(nFiles.get(position));
-                //Boolean likeBool=(holder.like_music.getDrawable().getConstantState()== nContext.getResources().getDrawable( R.drawable.heart_vec).getConstantState());
-                if(likeBool)
-                {
+
                     likefiles.remove(nFiles.get(position));
                     holder.like_music.setImageResource(R.drawable.heart_vec);
-                    likeBool=false;
-                }
-                else {
-                    likefiles.add(nFiles.get(position));
-                    holder.like_music.setImageResource(R.drawable.heart_on);
-                    likeBool=true;
-                }
+
+                    notifyItemRemoved(position);
+
             }
         });
     }

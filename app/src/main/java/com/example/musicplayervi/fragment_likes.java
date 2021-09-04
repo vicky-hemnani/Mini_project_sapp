@@ -1,6 +1,6 @@
 package com.example.musicplayervi;
 
-import static com.example.musicplayervi.MainActivity.musicfiles;
+import static com.example.musicplayervi.MainActivity.likefiles;
 
 import android.os.Bundle;
 
@@ -17,7 +17,7 @@ public class fragment_likes extends Fragment {
 
 
     RecyclerView recyclerView;
-    MusicAdaptor musicAdaptor;
+    LikesAdaptor likesAdaptor;
     public fragment_likes() {
     }
 
@@ -27,10 +27,10 @@ public class fragment_likes extends Fragment {
         View view=inflater.inflate(R.layout.fragment_songs, container, false);
         recyclerView=view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        if(musicfiles!=null) {
-            if (!(musicfiles.size() < 1)) {
-                musicAdaptor = new MusicAdaptor(getContext(), musicfiles);
-                recyclerView.setAdapter(musicAdaptor);
+        if(likefiles!=null) {
+            if (!(likefiles.size() < 1)) {
+                likesAdaptor = new LikesAdaptor(getContext(), likefiles);
+                recyclerView.setAdapter(likesAdaptor);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
             }
 
