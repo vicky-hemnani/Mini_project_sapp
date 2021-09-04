@@ -1,5 +1,9 @@
 package com.example.musicplayervi;
 
+import static com.example.musicplayervi.MainActivity.likeBool;
+import static com.example.musicplayervi.MainActivity.shuffleBool;
+
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -48,7 +52,7 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MusicAdaptor.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MusicAdaptor.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.file_name.setText(nFiles.get(position).getTitle());
         byte[] image=getalbum(nFiles.get(position).getPath());
         if(image!=null)
@@ -82,6 +86,21 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
                     }
                     return true;
                 });
+            }
+        });
+
+        holder.like_music.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(likeBool)
+                {
+                    holder.like_music.setImageResource(R.drawable.heart_vec);
+                    likeBool=false;
+                }
+                else {
+                    holder.like_music.setImageResource(R.drawable.heart_on);
+                    likeBool=true;
+                }
             }
         });
     }
