@@ -38,11 +38,13 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE=1;
     static ArrayList<Music> musicfiles,likefiles;
+
     static boolean shuffleBool=false,repeatBool=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +52,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initViewPager();
         permission();
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("shared", MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = sharedPreferences.getString("task list", null);
+        String json = sharedPreferences.getString("list", null);
         Type type = new TypeToken<ArrayList<Music>>() {}.getType();
         likefiles = gson.fromJson(json, type);
+        Log.d("LikesFile", "is null "+(likefiles==null));
         if(likefiles==null)
         {
             likefiles=new ArrayList<>();
@@ -63,14 +66,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = getSharedPreferences("shared", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("list", null);
+        Type type = new TypeToken<ArrayList<Music>>() {}.getType();
+        likefiles = gson.fromJson(json, type);
+        if(likefiles==null)
+        {
+            likefiles=new ArrayList<>();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        SharedPreferences sharedPreferences = getSharedPreferences("shared", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("list", null);
+        Type type = new TypeToken<ArrayList<Music>>() {}.getType();
+        likefiles = gson.fromJson(json, type);
+        if(likefiles==null)
+        {
+            likefiles=new ArrayList<>();
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         Log.d("LikedMain", "onPause: here it is");
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("shared", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(likefiles);
-        editor.putString("task list", json);
+        Log.d("Josn caontent", "onPause: "+json);
+        editor.putString("list", json);
         editor.apply();
     }
 

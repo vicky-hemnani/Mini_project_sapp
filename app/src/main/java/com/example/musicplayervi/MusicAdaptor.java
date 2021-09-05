@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder> {
 
+    Boolean b=false;
     private Context nContext;
     private ArrayList<Music> nFiles;
 
@@ -55,12 +56,22 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull MusicAdaptor.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.file_name.setText(nFiles.get(position).getTitle());
-        if(likefiles!=null){
-        Boolean b=likefiles.contains(musicfiles.get(position));
-        if(b)
-            holder.like_music.setImageResource(R.drawable.heart_on);
-        else
-            holder.like_music.setImageResource(R.drawable.heart_vec);}
+        b=false;
+        String ids=nFiles.get(position).getId();
+        if(likefiles.isEmpty()==false){
+        for(Music mu:likefiles)
+        {
+            if(mu.getId().equals(ids))
+            {
+                b=true;
+            }
+            Log.d("What is like", "Say so: "+mu);
+        }
+            Log.d("LikesFile", "is null "+likefiles.get(0)+" ----"+nFiles.get(position));
+            if(b==true){
+            holder.like_music.setImageResource(R.drawable.heart_on);}
+        else{
+            holder.like_music.setImageResource(R.drawable.heart_vec);}}
         byte[] image=getalbum(nFiles.get(position).getPath());
         if(image!=null)
         {
@@ -104,14 +115,13 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
                 //Boolean likeBool=(holder.like_music.getDrawable().getConstantState()== nContext.getResources().getDrawable( R.drawable.heart_vec).getConstantState());
                 if(likeBool)
                 {
-                    likefiles.remove(nFiles.get(position));
+                    likefiles.remove(musicfiles.get(position));
                     holder.like_music.setImageResource(R.drawable.heart_vec);
-                    likeBool=false;
+                    //likeBool=false;
                 }
                 else {
-                    likefiles.add(nFiles.get(position));
+                    likefiles.add(musicfiles.get(position));
                     holder.like_music.setImageResource(R.drawable.heart_on);
-                    likeBool=true;
                 }
             }
         });
