@@ -14,6 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -32,6 +35,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
 
@@ -46,7 +50,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initViewPager();
         permission();
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("task list", null);
+        Type type = new TypeToken<ArrayList<Music>>() {}.getType();
+        likefiles = gson.fromJson(json, type);
+        if(likefiles==null)
+        {
+            likefiles=new ArrayList<>();
+        }
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("LikedMain", "onPause: here it is");
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(likefiles);
+        editor.putString("task list", json);
+        editor.apply();
     }
 
    /* private void permission() {
@@ -72,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
        }
        else{
            musicfiles=getAllAudio(this);
-           likefiles=new ArrayList<>();
+
+
            initViewPager();
        }
    }
@@ -201,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return tempAudio;
     }
+
 }
 
 

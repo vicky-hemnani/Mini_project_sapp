@@ -96,10 +96,12 @@ public class LikesAdaptor extends RecyclerView.Adapter<LikesAdaptor.MyViewHolder
             @Override
             public void onClick(View v) {
 
-                    likefiles.remove(nFiles.get(position));
-                    holder.like_music.setImageResource(R.drawable.heart_vec);
+                    //likefiles.remove(nFiles.get(position));
+                Log.d("hello", "position is "+position);
+                nFiles.remove(position);
 
-                    notifyItemRemoved(position);
+                notifyDataSetChanged();
+
 
             }
         });

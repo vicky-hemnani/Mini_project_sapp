@@ -55,7 +55,7 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull MusicAdaptor.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.file_name.setText(nFiles.get(position).getTitle());
-        if(likefiles.isEmpty()!=true){
+        if(likefiles!=null){
         Boolean b=likefiles.contains(musicfiles.get(position));
         if(b)
             holder.like_music.setImageResource(R.drawable.heart_on);
@@ -99,7 +99,8 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
         holder.like_music.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Boolean likeBool=likefiles.contains(nFiles.get(position));
+                Boolean likeBool=false;
+                likeBool=likefiles.contains(nFiles.get(position));
                 //Boolean likeBool=(holder.like_music.getDrawable().getConstantState()== nContext.getResources().getDrawable( R.drawable.heart_vec).getConstantState());
                 if(likeBool)
                 {
@@ -114,6 +115,7 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
                 }
             }
         });
+
     }
 
     private void deleteSong(int position, View v) {

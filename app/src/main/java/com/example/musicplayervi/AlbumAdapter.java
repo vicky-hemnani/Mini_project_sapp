@@ -30,7 +30,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
         this.nContext = nContext;
         this.albumFilesHash=albumFilesHash;
     }
-
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
