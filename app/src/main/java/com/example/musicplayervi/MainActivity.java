@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
+    /**@Override
     protected void onRestart() {
         super.onRestart();
         SharedPreferences sharedPreferences = getSharedPreferences("shared", MODE_PRIVATE);
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         {
             likefiles=new ArrayList<>();
         }
-    }
+    }*/
 
     @Override
     public void onPause() {

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder> {
 
     Boolean b=false;
+    int pos=0;
     private Context nContext;
     private ArrayList<Music> nFiles;
 
@@ -111,11 +112,23 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
             @Override
             public void onClick(View v) {
                 Boolean likeBool=false;
-                likeBool=likefiles.contains(nFiles.get(position));
+                int i=0;
+                String ids=nFiles.get(position).getId();
+                if(likefiles.isEmpty()==false) {
+                    for (Music mu : likefiles) {
+
+                        if (mu.getId().equals(ids)) {
+                            likeBool = true;
+                            pos=i;
+                        }
+                        i++;
+                        Log.d("What is like", "Say so: " + mu);
+                    }
+                }
                 //Boolean likeBool=(holder.like_music.getDrawable().getConstantState()== nContext.getResources().getDrawable( R.drawable.heart_vec).getConstantState());
                 if(likeBool)
                 {
-                    likefiles.remove(musicfiles.get(position));
+                    likefiles.remove(pos);
                     holder.like_music.setImageResource(R.drawable.heart_vec);
                     //likeBool=false;
                 }

@@ -95,8 +95,6 @@ public class LikesAdaptor extends RecyclerView.Adapter<LikesAdaptor.MyViewHolder
         holder.like_music.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                    //likefiles.remove(nFiles.get(position));
                 Log.d("hello", "position is "+position);
                 nFiles.remove(position);
 
