@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -39,8 +42,9 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     public static final int REQUEST_CODE=1;
     static ArrayList<Music> musicfiles,likefiles;
@@ -106,20 +110,22 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-   /* private void permission() {
 
-        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
-            , REQUEST_CODE);
-        }
-        else{
-            Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
-            musicfiles=getAllAudio(this);
-        }
-    }*/
-  private void permission() {
+
+    /* private void permission() {
+
+            if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
+                , REQUEST_CODE);
+            }
+            else{
+                Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+                musicfiles=getAllAudio(this);
+            }
+        }*/
+    private void permission() {
 
        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                != PackageManager.PERMISSION_GRANTED)
@@ -191,6 +197,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+
+
     public static class ViewPagerAdapter extends FragmentPagerAdapter {
 
         private ArrayList<Fragment> fragments;
@@ -260,6 +268,36 @@ public class MainActivity extends AppCompatActivity {
         return tempAudio;
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search,menu);
+        MenuItem menuItem=menu.findItem(R.id.search_opt);
+        SearchView searchView=(SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        String userInp=newText.toLowerCase();
+        ArrayList<Music> myFiles=new ArrayList<>();
+        for (Music song:musicfiles)
+        {
+            if(song.getTitle().toLowerCase().contains(userInp))
+            {
+                myFiles.add(song);
+            }
+        }
+        fragment_songs.musicAdaptor.updateList(myFiles);
+        return true;
+    }
 }
 
 

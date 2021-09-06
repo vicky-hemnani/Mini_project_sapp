@@ -16,7 +16,7 @@ import static com.example.musicplayervi.MainActivity.musicfiles;
 public class fragment_songs extends Fragment {
 
     RecyclerView recyclerView;
-    MusicAdaptor musicAdaptor;
+    static MusicAdaptor musicAdaptor;
     public fragment_songs() {
     }
 

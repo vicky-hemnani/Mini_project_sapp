@@ -36,7 +36,7 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
     Boolean b=false;
     int pos=0;
     private Context nContext;
-    private ArrayList<Music> nFiles;
+    static ArrayList<Music> nFiles;
 
     MusicAdaptor(Context context,ArrayList<Music> nFiles)
     {
@@ -190,5 +190,12 @@ public class MusicAdaptor extends RecyclerView.Adapter<MusicAdaptor.MyViewHolder
         byte[] art=retriever.getEmbeddedPicture();
         retriever.release();
         return art;
+    }
+
+    void updateList(ArrayList<Music> musicFilesArrayList)
+    {
+        nFiles=new ArrayList<>();
+        nFiles.addAll(musicFilesArrayList);
+        notifyDataSetChanged();
     }
 }
