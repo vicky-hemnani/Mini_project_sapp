@@ -2,8 +2,12 @@ package com.example.musicplayervi;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.palette.graphics.Palette;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -36,6 +41,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static com.example.musicplayervi.AlbumDetailsAdaptor.albumFilesHash;
+import static com.example.musicplayervi.ApplicationClass.ACTION_NEXT;
+import static com.example.musicplayervi.ApplicationClass.ACTION_PLAY;
+import static com.example.musicplayervi.ApplicationClass.ACTION_PREVIOUS;
+import static com.example.musicplayervi.ApplicationClass.CHANNEL_ID_2;
 import static com.example.musicplayervi.MainActivity.musicfiles;
 import static com.example.musicplayervi.MainActivity.*;
 import static com.example.musicplayervi.MusicAdaptor.nFiles;
@@ -53,12 +62,14 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
     //static MediaPlayer media_obj;
     private Handler handler=new Handler();
     MusicService musicService;
+    MediaSessionCompat mediaSessionCompat;
     private Thread playThread,preThread,nextThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+        mediaSessionCompat=new MediaSessionCompat(getBaseContext(),"My Audio");
         initViews();
         getIntentFunction();
 
@@ -180,7 +191,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
             //media_obj=MediaPlayer.create(getApplicationContext(),uri);
             musicService.createMediaPlayer(position);
             musicService.start();*/
-
+        showNotification(R.drawable.pause_vec);
         Intent intent=new Intent(this,MusicService.class);
         intent.putExtra("servicePosition",position);
         startService(intent);
@@ -370,6 +381,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
             });
             //media_obj.setOnCompletionListener(this);
             musicService.onCompleted();
+            showNotification(R.drawable.pause_vec);
             playPauseBtn.setBackgroundResource(R.drawable.pause_vec);
             musicService.start();
         }
@@ -404,6 +416,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
             });
             //media_obj.setOnCompletionListener(this);
             musicService.onCompleted();
+            showNotification(R.drawable.play_vec);
             playPauseBtn.setBackgroundResource(R.drawable.play_vec);
         }
     }
@@ -462,6 +475,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
             });
             //media_obj.setOnCompletionListener(this);
             musicService.onCompleted();
+            showNotification(R.drawable.pause_vec);
             playPauseBtn.setBackgroundResource(R.drawable.pause_vec);
             musicService.start();
         }
@@ -496,6 +510,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
             });
             //media_obj.setOnCompletionListener(this);
             musicService.onCompleted();
+            showNotification(R.drawable.play_vec);
             playPauseBtn.setBackgroundResource(R.drawable.play_vec);
         }
     }
@@ -527,6 +542,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
     public void playPauseBtnClicked() {
         if(musicService.isPlaying()){
             playPauseBtn.setImageResource(R.drawable.play_vec);
+            showNotification(R.drawable.play_vec);
             musicService.pause();
             seekBar.setMax(musicService.getDuration()/1000);
             PlayerActivity.this.runOnUiThread(new Runnable() {
@@ -543,6 +559,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
         }
         else {
             playPauseBtn.setImageResource(R.drawable.pause_vec);
+            showNotification(R.drawable.pause_vec);
             musicService.start();
             seekBar.setMax(musicService.getDuration()/1000);
             PlayerActivity.this.runOnUiThread(new Runnable() {
@@ -588,5 +605,58 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
     @Override
     public void onServiceDisconnected(ComponentName name) {
         musicService=null;
+    }
+
+    void showNotification(int playPauseBtn)
+    {
+        Intent intent=new Intent(this,PlayerActivity.class);
+        PendingIntent contentIntent=PendingIntent.getActivity(this,0,intent,0);
+
+        Intent previntent=new Intent(this, NotificationReceiver.class).setAction(ACTION_PREVIOUS);
+        PendingIntent prevPending=PendingIntent.getBroadcast(this,0,previntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent pauseintent=new Intent(this, NotificationReceiver.class).setAction(ACTION_PLAY);
+        PendingIntent pausePending=PendingIntent.getBroadcast(this,0,pauseintent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent nextintent=new Intent(this, NotificationReceiver.class).setAction(ACTION_NEXT);
+        PendingIntent nextPending=PendingIntent.getBroadcast(this,0,nextintent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        byte[] picture=null;
+        picture=getalbum(musicfiles.get(position).getPath());
+        Bitmap thumb=null;
+        if(picture!=null)
+        {
+            thumb=BitmapFactory.decodeByteArray(picture,0,picture.length);
+        }
+        else {
+            thumb=BitmapFactory.decodeResource(getResources(),R.drawable.imgg);
+        }
+
+        Notification notification=new NotificationCompat.Builder(this,CHANNEL_ID_2)
+                .setSmallIcon(playPauseBtn)
+                .setLargeIcon(thumb)
+                .setContentTitle(musicfiles.get(position).getTitle())
+                .setContentText(musicfiles.get(position).getArtist())
+                .addAction(R.drawable.skip_prev,"Previous",prevPending)
+                .addAction(playPauseBtn,"Pause",pausePending)
+                .addAction(R.drawable.skip_next,"Next",nextPending)
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                        .setMediaSession(mediaSessionCompat.getSessionToken()))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setOnlyAlertOnce(true)
+                .build();
+
+        NotificationManager notificationManager=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0,notification);
+
+    }
+
+    private byte[] getalbum(String uri)
+    {
+        MediaMetadataRetriever retriever=new MediaMetadataRetriever();
+        retriever.setDataSource(uri);
+        byte[] art=retriever.getEmbeddedPicture();
+        retriever.release();
+        return art;
     }
 }
